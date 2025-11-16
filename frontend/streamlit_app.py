@@ -6,6 +6,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from pathlib import Path
 import base64
+from model_loader import load_model_artifacts
 
 # Page configuration
 st.set_page_config(
@@ -53,16 +54,8 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Load model and scaler
-@st.cache_resource
-def load_model_artifacts():
-    try:
-        model = joblib.load('../models/tuned_random_forest.joblib')
-        scaler = joblib.load('../models/scaler.joblib')
-        return model, scaler
-    except:
-        st.error("⚠️ Model files not found. Please ensure model training is complete.")
-        return None, None
+# Model loading is now handled by model_loader.py
+# It will automatically download from Google Drive if needed
 
 # Load feature importance
 @st.cache_data

@@ -6,8 +6,8 @@ from pathlib import Path
 
 
 MODEL_URLS = {
-    'tuned_random_forest.joblib': 'https://drive.google.com/file/d/1Z3RMLFn934osIzz5zVYJoa4VbCdDIHQD/view?usp=sharing',
-    'scaler.joblib': 'https://drive.google.com/file/d/1F56EmPfF3VhaP4M7V6bhzsi14Z7KiDka/view?usp=sharing'
+    'tuned_random_forest.joblib': 'https://drive.google.com/uc?export=download&id=1Z3RMLFn934osIzz5zVYJoa4VbCdDIHQD',
+    'scaler.joblib': 'https://drive.google.com/uc?export=download&id=1F56EmPfF3VhaP4M7V6bhzsi14Z7KiDka'
 }
 
 MODEL_DIR = Path('../models')
