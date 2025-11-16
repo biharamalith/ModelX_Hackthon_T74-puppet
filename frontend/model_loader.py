@@ -13,8 +13,21 @@ MODEL_URLS = {
 MODEL_DIR = Path('../models')
 
 def download_file(url, destination):
-    """Download file from URL with progress bar"""
-    response = requests.get(url, stream=True)
+    """Download file from Google Drive with progress bar"""
+    session = requests.Session()
+    
+    # First request to get the file
+    response = session.get(url, stream=True)
+    
+    # Check if we need to confirm download (large files)
+    for key, value in response.cookies.items():
+        if key.startswith('download_warning'):
+            # Get the confirmation token
+            params = {'confirm': value}
+            url = url + '&confirm=' + value
+            response = session.get(url, params=params, stream=True)
+            break
+    
     total_size = int(response.headers.get('content-length', 0))
     
     progress_bar = st.progress(0)
