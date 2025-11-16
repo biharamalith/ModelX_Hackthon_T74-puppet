@@ -52,7 +52,8 @@ coverage.xml
 .pytest_cache/
 
 # Models and data (large files)
-*.joblib
+# Allow model files for deployment
+!models/*.joblib
 *.pkl
 *.pickle
 *.h5
