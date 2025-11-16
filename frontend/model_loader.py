@@ -4,10 +4,10 @@ import joblib
 import streamlit as st
 from pathlib import Path
 
-# Model download URLs (replace with your actual URLs)
+
 MODEL_URLS = {
-    'tuned_random_forest.joblib': 'YOUR_GOOGLE_DRIVE_DIRECT_LINK_HERE',
-    'scaler.joblib': 'YOUR_GOOGLE_DRIVE_DIRECT_LINK_HERE'
+    'tuned_random_forest.joblib': 'https://drive.google.com/file/d/1Z3RMLFn934osIzz5zVYJoa4VbCdDIHQD/view?usp=sharing',
+    'scaler.joblib': 'https://drive.google.com/file/d/1F56EmPfF3VhaP4M7V6bhzsi14Z7KiDka/view?usp=sharing'
 }
 
 MODEL_DIR = Path('../models')
