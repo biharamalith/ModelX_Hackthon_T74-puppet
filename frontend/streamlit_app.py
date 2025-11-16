@@ -9,7 +9,7 @@ import base64
 
 # Page configuration
 st.set_page_config(
-    page_title="ModelX - Dementia Risk Predictor",
+    page_title="Puppet - Dementia Risk Predictor",
     page_icon="🧠",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -23,6 +23,9 @@ st.markdown("""
         color: #1f77b4;
         text-align: center;
         margin-bottom: 2rem;
+    }
+    .stImage {
+        max-width: 100%;
     }
     .sub-header {
         font-size: 1.5rem;
@@ -54,8 +57,8 @@ st.markdown("""
 @st.cache_resource
 def load_model_artifacts():
     try:
-        model = joblib.load('models/tuned_random_forest.joblib')
-        scaler = joblib.load('models/scaler.joblib')
+        model = joblib.load('../models/tuned_random_forest.joblib')
+        scaler = joblib.load('../models/scaler.joblib')
         return model, scaler
     except:
         st.error("⚠️ Model files not found. Please ensure model training is complete.")
@@ -65,7 +68,7 @@ def load_model_artifacts():
 @st.cache_data
 def load_feature_importance():
     try:
-        return pd.read_csv('reports/feature_importance_tuned_rf.csv')
+        return pd.read_csv('../reports/feature_importance_tuned_rf.csv')
     except:
         return None
 
@@ -73,12 +76,13 @@ def load_feature_importance():
 @st.cache_data
 def load_model_comparison():
     try:
-        return pd.read_csv('reports/model_comparison_results.csv')
+        return pd.read_csv('../reports/model_comparison_results.csv')
     except:
         return None
 
 # Sidebar navigation
-st.sidebar.markdown("# 🧠 ModelX Navigation")
+st.sidebar.markdown("# 🧠 Puppet Navigation")
+st.sidebar.markdown("**Team T74**")
 page = st.sidebar.radio(
     "Go to:",
     ["🏠 Home", "🔮 Risk Predictor", "📊 Project Deliverables", "📈 Model Performance", "🎯 Feature Importance", "ℹ️ About"]
@@ -86,14 +90,16 @@ page = st.sidebar.radio(
 
 # Helper function to display images
 def display_image(image_path, caption):
-    if Path(image_path).exists():
-        st.image(image_path, caption=caption, use_container_width=True)
+    full_path = Path(f"../{image_path}")
+    if full_path.exists():
+        st.image(str(full_path), caption=caption, use_column_width=True)
     else:
         st.warning(f"Image not found: {image_path}")
 
 # HOME PAGE
 if page == "🏠 Home":
-    st.markdown('<h1 class="main-header">🧠 ModelX: Dementia Risk Assessment System</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">🧠 Puppet: Dementia Risk Assessment System</h1>', unsafe_allow_html=True)
+    st.markdown('<p style="text-align: center; color: #7f8c8d;">Team T74 - Bihara Malith</p>', unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns(3)
     
@@ -158,6 +164,7 @@ if page == "🏠 Home":
 # RISK PREDICTOR PAGE
 elif page == "🔮 Risk Predictor":
     st.markdown('<h1 class="main-header">🔮 Dementia Risk Predictor</h1>', unsafe_allow_html=True)
+    st.markdown('<p style="text-align: center; color: #7f8c8d;">Team Puppet (T74)</p>', unsafe_allow_html=True)
     
     model, scaler = load_model_artifacts()
     
@@ -327,14 +334,19 @@ elif page == "📊 Project Deliverables":
     with tabs[0]:
         st.markdown("### 📈 Exploratory Data Analysis Report")
         
-        # Link to HTML report
-        eda_report_path = Path("reports/modelx_eda_report.html")
+        # Display EDA report inline
+        eda_report_path = Path("../reports/modelx_eda_report.html")
         if eda_report_path.exists():
-            st.success("✅ Full EDA report available")
-            st.markdown(f"[📄 Open Full EDA Report](reports/modelx_eda_report.html)")
-            st.info("The complete ydata-profiling report contains detailed statistics, correlations, missing values analysis, and variable distributions.")
+            st.success("✅ Full EDA report loaded successfully")
+            st.info("📊 The complete ydata-profiling report contains detailed statistics, correlations, missing values analysis, and variable distributions.")
+            
+            # Read and display HTML content
+            with open(eda_report_path, 'r', encoding='utf-8') as f:
+                html_content = f.read()
+                st.components.v1.html(html_content, height=800, scrolling=True)
         else:
-            st.warning("EDA report not found. Please run EDA.py first.")
+            st.warning("⚠️ EDA report not found. Please run EDA.py first to generate the report.")
+            st.code("python EDA.py", language="bash")
     
     with tabs[1]:
         st.markdown("### 🖼️ Key Visualizations")
@@ -532,12 +544,12 @@ elif page == "🎯 Feature Importance":
 
 # ABOUT PAGE
 elif page == "ℹ️ About":
-    st.markdown('<h1 class="main-header">ℹ️ About ModelX</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">ℹ️ About Puppet</h1>', unsafe_allow_html=True)
     
     st.markdown("""
     ### 🎯 Project Overview
     
-    **ModelX** is a machine learning system designed to assess dementia risk using only non-medical, 
+    **Puppet** is a machine learning system designed to assess dementia risk using only non-medical, 
     self-reported information that is easily accessible to the general public. This tool aims to 
     provide early risk assessment without requiring expensive medical tests or clinical expertise.
     
@@ -603,26 +615,48 @@ elif page == "ℹ️ About":
     - Scikit-learn Documentation
     - XGBoost Documentation
     - Streamlit Framework
+    """)
     
-    ---
+    st.markdown("---")
+    st.markdown("### 👥 Development Team")
     
-    ### 👥 Development Team
+    col1, col2 = st.columns(2)
     
-    **ModelX Hackathon Project**  
-    Developed for dementia risk assessment research and education.
+    with col1:
+        st.markdown("""
+        #### Team Information
+        - **Team Name:** Puppet
+        - **Team Number:** T74
+        - **Project:** Dementia Risk Assessment System
+        - **Hackathon:** ModelX Optimization Sprint
+        """)
     
-    ---
+    with col2:
+        st.markdown("""
+        #### Team Members
+        - **Team Leader & Developer:** Bihara Malith
+        - **Role:** Full Stack ML Development
+        - **Responsibilities:** 
+          - Data preprocessing & EDA
+          - Model development & tuning
+          - Streamlit app development
+        """)
     
+    st.markdown("---")
+    st.markdown("""
     ### 📧 Contact & Feedback
     
     For questions, suggestions, or collaboration opportunities, please reach out through the project repository.
+    
+    **GitHub Repository:** [ModelX_Hackathon_team-puppet](https://github.com/biharamalith/ModelX_Hackthon_team-puppet)
     """)
 
 # Footer
 st.markdown("---")
 st.markdown("""
 <div style='text-align: center; color: #7f8c8d;'>
-    <p>🧠 ModelX - Dementia Risk Assessment System | Built with Streamlit</p>
+    <p>🧠 Puppet (Team T74) - Dementia Risk Assessment System | Built with Streamlit</p>
+    <p>Developed by Bihara Malith</p>
     <p>⚠️ For Educational Purposes Only - Not a Substitute for Medical Advice</p>
 </div>
 """, unsafe_allow_html=True)
